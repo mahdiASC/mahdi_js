@@ -147,6 +147,10 @@ var avgArray = function(array){
   return sumArray(array)/array.length;
 }
 
+Array.prototype.avg = function(){
+  return avgArray(this);
+}
+
 var stdDev = function(array){
   // returns the std dev of an array of numbers
   var avg = avgArray(array);
@@ -182,16 +186,24 @@ function onlyLettersNums(str) {
 
 // Removes an item from a given array
 function removeArrayItem(arr, item) {
-    var i = 0;
-    while (i < arr.length) {
-        if (arr[i] == item) {
-            arr.splice(i, 1);
-        } else {
-            i++;
-        }
-    }
+  //can remove via index, too  
+  let find = typeof item =="number" ? arr[item]:item;
+  if(!find){
+    throw new RangeError(`Index ${item} out of range for array length ${arr.length}`);
+  }
+  var i = 0;
+  while (i < arr.length) {
+      if (arr[i] == find) {
+          arr.splice(i, 1);
+      } else {
+          i++;
+      }
+  }
 };
 
+Array.prototype.remove = function(item){
+  return removeArrayItem(this, item);
+}
 
 // Does a given array contain a item
 function contains(a, obj) {
