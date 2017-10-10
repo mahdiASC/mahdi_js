@@ -138,6 +138,10 @@ var sumArray = function(array){
   }, 0);
 }
 
+Array.prototype.sum = function(){
+  return sumArray(this);
+}
+
 var avgArray = function(array){
   // returns average of array of numbers
   return sumArray(array)/array.length;
@@ -213,26 +217,44 @@ Array.prototype.random = function(){
   return myRandom(this);
 }
 
-//accepts random object input with decimal percentages of probabilities as values
-function propRandom(obj){
+//accepts random object input with decimal percentages(or counts) of probabilities as values
+function randProb(obj){
   // {
   //   "first": 0.5,
   //   "second": 0.25,
   //   "third": 0.25
   // }
 
-  //must add up to 1
-  let sum = 0;
-  for(let k of obj){
-    if(typeof k != "number"){
-      throw new TypeError(`Object value was not a number: ${k}`);
+  // {
+  //   "first": 10,
+  //   "second": 5,
+  //   "third": 5
+  // }
+  let temp = [];
+  //Getting total to determine if probabilities or counts
+  let keys = Object.keys(obj);
+  for(let key of keys){
+    if(typeof obj[key] != "number"){
+      throw new TypeError(`Object value was not a number: ${obj[key]}`);
     }
-    sum += k;
+    temp.push(obj[key]);
   }
 
-  if(sum!=1){
-    throw new RangeError(`Values did not totalled ${sum}, instead of 1`);
+  let sum = temp.sum();
+
+  if(sum < 1){
+      throw new RangeError(`Values totalled ${sum}, instead of 1 or more`);
+  }else if(sum!=1){
+    temp = temp.map(x=>x/temp.sum()); //will set counts to be proper probability
   }
 
-
+  let pick = Math.random();
+  let running_total = 0;
+  for(let i = 0; i < keys.length; i++){
+    running_total += temp[i];
+    if(pick<= running_total){
+      return keys[i];
+    }
+  }
+  throw new Error("Something went wrong!");
 }
