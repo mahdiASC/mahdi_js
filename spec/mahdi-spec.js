@@ -82,43 +82,59 @@ describe("mahdi.js", function () {
         it("should modify the array and return the array with the item removed", function () {
             let myArray = ["this","that"];
             let output = removeArrayItem(myArray,"this");
+            // console.log(output);
             expect(output).toEqual(["that"]);
             expect(myArray).toEqual(["that"]);
         });
     });
-    xdescribe("z-score", function () {
-        it("", function () {
-
+    describe("z_score", function () {
+        it("should throw an error if any of the 3 parameters are undefined", function () {
+            expect(()=>z_score(3,5,undefined)).toThrow();
+            expect(()=>z_score(3,undefined,2)).toThrow();
+            expect(()=>z_score(undefined,3,5)).toThrow();
         });
-        it("", function () {
-
+        it("should throw an error if any of the 3 parameters are not a number", function () {
+            expect(()=>z_score(3,5,"blah")).toThrow();
+            expect(()=>z_score(3,"blah",2)).toThrow();
+            expect(()=>z_score("blah",3,5)).toThrow();
+        });
+        it("should return the proper z-score with the 3 parameters, in order, being the (a) value of interest, (b) the mean, and (c) the standard deviation", function () {
+            expect(z_score(190,150,25)).toBe(1.6);
+        });
+    });
+    
+    describe("calc_percentile", function () {
+        it("should throw an error in the input is not a number", function () {
+            expect(()=>calc_percentile("blah")).toThrow();
+        });
+        it("should properly return the approximate percentile given a z-score", function () {
+            expect(calc_percentile(.5)).toBeCloseTo(.69,2);
         });
 
     });
-    xdescribe("calc_percentile", function () {
-        it("", function () {
-
+    describe("asyncLoop", function () {
+        //incomplete spec 
+        it("should throw an error if the 3 parameters, in order, are not a number then a function then another function", function () {
+            expect(()=>asyncLoop(1, ()=>{}, 4)).toThrow();
+            expect(()=>asyncLoop(1, 4, ()=>{})).toThrow();
+            expect(()=>asyncLoop("blah", ()=>{}, ()=>{} )).toThrow();
         });
-        it("", function () {
-
-        });
-
     });
-    xdescribe("asyncLoop", function () {
-        it("", function () {
-
+    describe("findDuplicates", function () {
+        it("should throw an error if the input parameter is not an array", function () {
+            expect(()=>findDuplicates("blah")).toThrow();
         });
-        it("", function () {
-
+        it("should return an empty array when there are no duplicates", function () {
+            let myArray = [1,3,5,6,82,346];
+            expect(findDuplicates(myArray)).toEqual([]);
         });
-
-    });
-    xdescribe("findDuplicates", function () {
-        it("", function () {
-
-        });
-        it("", function () {
-
+        it("should return an array of the duplicate elements when there are duplicates", function () {
+            let myArray = [1,3,4,45,45,6,6,82,346];
+            let result = findDuplicates(myArray);
+            expect(result).toEqual([45,6]);
+            expect(result).toContain(45);
+            expect(result).toContain(6);
+            expect(result.length).toBe(2);
         });
 
     });
