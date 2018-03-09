@@ -1,4 +1,5 @@
 describe("M",function(){
+    // constructor
     describe("constructor",function(){
         it("should run without arguments without error",function(){
             expect(M).toBeDefined();
@@ -14,5 +15,45 @@ describe("M",function(){
             let x = new M(123);
             expect(x.seed).toBe(123);
         });
-    })
+    });
+
+    // random
+
+    // randName
+
+    ///////////////////////
+    //STRING MANIPULATION//
+    ///////////////////////
+
+    //capFirst
+    de
+    //filterASCII
+    
+    //_enhanceArrays
+    
+    //_qsFunc
+
+    //quickSort
+    
+    //sum
+
+    //sd
+
+    //remove
+
+    //findDups
+
+    /////////
+    //STATS//
+    /////////
+
+    //randProb
+
+    //z_score
+
+    //calc_percentile
+
+    //async_loop
+
+
 })
