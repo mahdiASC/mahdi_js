@@ -82,9 +82,11 @@ describe("M",function(){
             let new_m = new M({enhanceFlag:true});
             expect("blah".capFirst()).toBe("Blah");
             expect("blah jxy".capFirst(true)).toBe("Blah Jxy");
-            expect("blahxjxy".capFirst(true)).toBe("BlahxJxY");
-            expect("blahxjxy".capFirst(true)).toBe("blahxjxy");
-            expect(["blah","yxy"].capFirst()).toEqual(["Blah","Yxy"]); //technically and array method!
+            expect("blahxjxy".capFirst(true)).toBe("Blahxjxy");
+            expect("blahxjxy".capFirst(true, "x")).toBe("BlahxJxY");
+            expect(["blah","yxy"].capFirst()).toEqual(["Blah","Yxy"]);
+            expect(["blah blah","xyz xyz"].capFirst(true)).toEqual(["Blah Blah","Xyz Xyz"]);
+            expect(["blahxblah","nicenice"].capFirst(true, "x")).toEqual(["BlahxBlah","Nicenice"]);
         });
     });
     //filterASCII
