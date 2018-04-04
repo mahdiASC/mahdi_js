@@ -137,17 +137,39 @@ describe("M",function(){
 
         describe("should not enhance when methods are already defined", function(){
             let checkStringMethod = function (method_name){
+                let temp = String.prototype[method_name];
                 delete String.prototype[method_name];
                 let my_func = ()=>{};
+                Object.defineProperty(String.prototype, method_name,{
+                    enumerable:false,
+                    configurable:true,
+                    value: my_func
+                })
                 new M;
                 expect(""[method_name]=== my_func).toBeTruthy();
+                Object.defineProperty(String.prototype, method_name,{
+                    enumerable:false,
+                    configurable:true,
+                    value: temp
+                })
             }
     
             let checkArrayMethod = function (method_name){
+                let temp = Array.prototype[method_name];
                 delete Array.prototype[method_name];
                 let my_func = ()=>{};
+                Object.defineProperty(Array.prototype, method_name,{
+                    enumerable:false,
+                    configurable:true,
+                    value: my_func
+                })
                 new M;
-                expect([][method_name]=== my_func).toBeTruthy();
+                expect([][method_name] === my_func).toBeTruthy();
+                Object.defineProperty(Array.prototype, method_name,{
+                    enumerable:false,
+                    configurable:true,
+                    value: temp
+                })
             }
     
             let checkBoth = function(method_name){
@@ -166,23 +188,23 @@ describe("M",function(){
             });
 
             // quickSort
-            it(".quickSort ", function(){
+            it(".quickSort", function(){
                 checkArrayMethod("quickSort");
             });
             // sum
-            it(".sum ", function(){
+            it(".sum", function(){
                 checkArrayMethod("sum");
             });
             // sd
-            it(".sd ", function(){
+            it(".sd", function(){
                 checkArrayMethod("sd");
             });
             // remove
-            it(".remove ", function(){
+            it(".remove", function(){
                 checkArrayMethod("remove");
             });
             // findDups
-            it(".findDups ", function(){
+            it(".findDups", function(){
                 checkArrayMethod("findDups");
             });
         });
@@ -192,7 +214,7 @@ describe("M",function(){
     //RANDOM//
     //////////
     // random
-    xdescribe(".randName", function(){
+    xdescribe(".random", function(){
         it("should return pseudorandom numbers by default", function(){
 
         });
@@ -244,9 +266,9 @@ describe("M",function(){
             expect(()=>m.capFirst(123)).toThrow();
         });
 
-        it("should work properly String method when string enhancement is active", function(){
+        it("should work properly as String method when string enhancement is active", function(){
             // includes all above tests
-            let new_m = new M({enhance:true});
+            let new_m = new M({"enhance":true});
             expect("blah".capFirst()).toBe("Blah");
             expect("blah jxy".capFirst(true)).toBe("Blah Jxy");
             expect("blahxjxy".capFirst(true)).toBe("Blahxjxy");
@@ -258,13 +280,17 @@ describe("M",function(){
     });
 
     //filterASCII
-    xdescribe(".filterASCII", function(){
+    describe(".filterASCII", function(){
         it("should properly filter out only ASCII character from an input string", function(){
-
+            let m = new M;
+            expect(m.filterASCII("abcdEFG")).toBe("abcdEFG");
+            expect(m.filterASCII("ab#$%^cdEFG")).toBe("ab^cdEFG");
         });
 
-        it("",function(){
-
+        it("should work properly as String method when string enhancement is active", function(){
+            let m = new M;
+            expect("abcdEFG".filterASCII()).toBe("abcdEFG");
+            expect("ab#$%^cdEFG".filterASCII()).toBe("ab^cdEFG");
         });
     });
 
@@ -274,25 +300,89 @@ describe("M",function(){
 
     //quickSort
     xdescribe(".quickSort",function(){
-        it("properly returns values -1, 0, and 1 when sorting numbers and strings",function(){
+        let m;
+        beforeEach(function(){
+            m = new M;
+        })
 
+        it("should throw error if first two arguments are not both string or both number or if third argument is not a boolean", function(){
+            expect(()=>{m.sort(true, false)}).toThrow();
+            expect(()=>{m.sort(1, "a")}).toThrow();
+            expect(()=>{m.sort("a", 2)}).toThrow();
+            expect(()=>{m.sort(1, 2, 2)}).toThrow();
+        })
+        it("should not throw error when all parameters are valid",function(){
+            expect(()=>{m.sort(1, 2)}).not.toThrow();
+            expect(()=>{m.sort(1, 2, true)}).not.toThrow();
+        })
+        
+        it("properly returns values negative number, 0, or positive number when sorting numbers and strings",function(){
+            expect(m.quickSort(2,1)>0).toBeTruthy();
+            expect(m.quickSort(1,1)===0).toBeTruthy();
+            expect(m.quickSort(1,2)<0).toBeTruthy();            
         });
 
-        it("should work properly without error in the Array.sort() method",function(){
+        it("properly returns values -1, 0, or 1 when sorting strings in alphabetical order",function(){
+            expect(m.quickSort("b","a")).toBe(1);
+            expect(m.quickSort("a","a")).toBe(0);
+            expect(m.quickSort("a","b")).toBe(-1);
+        });
 
+        it("should have a 3rd optional boolean parameter, which, when true, will sort in descending order",function(){
+            expect(m.quickSort(2,1)<0).toBeTruthy();
+            expect(m.quickSort(1,1)===0).toBeTruthy();
+            expect(m.quickSort(1,2)>0).toBeTruthy();
+            expect(m.quickSort("b","a")).toBe(-1);
+            expect(m.quickSort("a","a")).toBe(0);
+            expect(m.quickSort("a","b")).toBe(1);
+        });
+
+        it("should work properly in the Array.sort() method",function(){
+            let arr1 = [4,3,2,1];
+            expect(arr1.sort(m.quickSort)).toEqual([1,2,3,4]);
+            let arr2 = ["d","c","b","a"];
+            expect(arr2.sort(m.quickSort)).toEqual(["a","b","c","d"]);
+        });
+
+        it("should work properly as an Array method when enhancement is active and can accept boolean value to return descending values",function(){
+            let new_m = new M({enhance:true});
+
+            let arr1 = [1,2,3,4];
+            expect(arr1.quicksort()).toEqual([1,2,3,4]);
+            expect(arr1.quicksort(true)).toEqual([4,3,2,1]);
+            
+            let arr2 = ["a","b","c","d"];
+            expect(arr2.quicksort()).toEqual(["a","b","c","d"]);
+            expect(arr2.quicksort(true)).toEqual(["d","c","b","a"]);
         });
     });
     
     //sum
-    xdescribe(".sum",function(){
-        it("should properly return the sum of the array",function(){
+    describe(".sum",function(){
+        let m;
+        beforeEach(function(){
+            m = new M;
+        });
 
+        it("should properly return the sum of the array",function(){
+            let arr = [1,2,3];
+            expect(m.sum(arr)).toBe(6);
         });
         it("should throw error if any element is not a number",function(){
-
+            let arr = [1,2,"3"];
+            expect(()=>m.sum(arr)).toThrow();
+        });
+        it("should throw error if input is not an array",function(){
+            expect(()=>m.sum(3)).toThrow();
         });
         it("should return 0 on an empty array",function(){
-
+            let arr = [];
+            expect(m.sum(arr)).toBe(0);
+        });
+        it("should work properly as Array method when enhancement is active",function(){
+            let new_m = new M({enhance: true});
+            let arr = [1,2,3];            
+            expect(arr.sum()).toBe(6);
         });
     });
     //sd
@@ -306,20 +396,53 @@ describe("M",function(){
         it("should return 0 on an empty array",function(){
 
         });
+        it("should work properly as Array method when enhancement is active",function(){
+        });
     });
     //remove
-    xdescribe(".remove",function(){
-        it("should remove the first given element from the array by default and return it",function(){
-
+    describe(".remove",function(){
+        let m;
+        beforeEach(function(){
+            m = new M;
         });
-        it("should remove all instances of the given element if 2nd flag argument is true and return all elements removed as a new array",function(){
-
+        it("should throw error if input is not an array",function(){
+            expect(()=>m.remove("abc","a")).toThrow();
         });
+
+        it("should remove the second argument given from the array by default and return that element",function(){
+            let arr = [1,2,3,4,5];
+            expect(m.remove(arr,2)).toBe(2);
+
+            let obj = {};
+            let arr2 = [1,2,obj];
+            expect(m.remove(arr2,obj)).toBe(obj);
+            expect(arr2).toEqual([1,2]);
+        });
+
         it("should return null if element is not found in the array by default",function(){
-
+            let arr = [1,2,3,4,5];            
+            expect(m.remove(arr, 6)).toBe(null);
         });
+        
+        it("should remove all instances of the given element if 3nd argument is true and return all elements removed as a new array",function(){
+            let arr = ["a","b","c","a","a","b"];
+            expect(m.remove(arr,"a", true)).toEqual(["a","a","a"]);
+            expect(arr).toEqual(["b","c","b"]);
+        });
+        
         it("should return empty array if element is not found and 2nd flag argument is true",function(){
+            let arr = [1,2,3,4,5];                        
+            expect(m.remove(arr, 6,true)).toEqual([]);
+        });
 
+        it("should work properly as Array method when enhancement is active",function(){
+            let arr = ["a","b","c","a","a","b"];
+            expect(arr.remove("a")).toBe("a");
+            expect(arr).toEqual(["b","c","a","a","b"]);
+            expect(arr.remove("a",true)).toEqual(["a","a"]);
+            expect(arr).toEqual(["b","c","b"]);
+            expect([].remove("b")).toBe(null);
+            expect([].remove("b",true)).toBe([]);
         });
     });
     //findDups
@@ -332,6 +455,8 @@ describe("M",function(){
         });
         it("should remove duplicate items if argument is true",function(){
 
+        });
+        it("should work properly as Array method when enhancement is active",function(){
         });
     });
 
