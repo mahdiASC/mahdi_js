@@ -442,21 +442,48 @@ describe("M",function(){
             expect(arr.remove("a",true)).toEqual(["a","a"]);
             expect(arr).toEqual(["b","c","b"]);
             expect([].remove("b")).toBe(null);
-            expect([].remove("b",true)).toBe([]);
+            expect([].remove("b",true)).toEqual([]);
         });
     });
     //findDups
-    xdescribe(".findDups",function(){
-        it("should return an array of duplicate items if no argument given",function(){
+    describe(".findDups",function(){
+        let m;
+        beforeEach(function(){
+            m = new M;
+        });
 
+        it("should throw an error if the first input argument is not an array",function(){
+            expect(()=>m.findDups(123)).toThrow();
+        });
+
+        it("should return an array of duplicate items (individual items that are duplicates in the original array)",function(){
+            let obj = {};
+            let arr = [1,1,1,2,4,1,5,5,6,obj,obj];
+            let result = m.findDups(arr);
+            console.log(result)
+            expect(result.includes(1)).toBeTruthy();
+            expect(result.includes(5)).toBeTruthy();
+            expect(result.includes(obj)).toBeTruthy();
         });
         it("should return an empty array if there are no duplicates",function(){
-
+            let arr = [1,2,3];
+            expect(m.findDups(arr)).toEqual([]);
         });
-        it("should remove duplicate items if argument is true",function(){
-
+        it("should return a new array of the non-duplicate items from the array if second argument is false",function(){
+            let arr = ["a","b","c","a","a","b"];
+            let result = m.findDups(arr,false);
+            expect(result).toEqual(["c"]);
         });
         it("should work properly as Array method when enhancement is active",function(){
+            let new_m = new M({enhance: true});
+            let obj = {};            
+            let arr = [1,1,1,2,1,5,5,obj,obj];
+            let result = arr.findDups();
+            expect(result.includes(1)).toBeTruthy();
+            expect(result.includes(5)).toBeTruthy();
+            expect(result.includes(obj)).toBeTruthy();
+            let result2 = m.findDups(arr,false);
+            expect(result2).toEqual([2]);
         });
     });
 
