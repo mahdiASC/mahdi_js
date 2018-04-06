@@ -380,23 +380,67 @@ describe("M",function(){
             expect(m.sum(arr)).toBe(0);
         });
         it("should work properly as Array method when enhancement is active",function(){
-            let new_m = new M({enhance: true});
+            new M({enhance: true});
             let arr = [1,2,3];            
             expect(arr.sum()).toBe(6);
         });
     });
-    //sd
-    xdescribe(".sd",function(){
-        it("should return the standard deviation of the array",function(){
-
+    //avg
+    describe(".avg",function(){
+        let m;
+        beforeEach(function(){
+            m = new M;
         });
-        it("should throw error if any element is not a number",function(){
 
+        it("should throw error if input is not an array or if any item is not a number",function(){
+            let arr = [1,3,4,5,"g"];
+            expect(()=>m.avg(arr)).toThrow();
+        });
+        it("should return the average value from the array",function(){
+            let arr = [1,2,3];
+            expect(m.avg(arr)).toBe(2);
+        });
+
+        it("should return null on an empty array",function(){
+            expect(m.avg([])).toBe(null);
+        });
+
+        it("should work properly as Array method when enhancement is active",function(){
+            new M({enhance:true});
+            let arr1 = [1,3,4,5,"g"];
+            expect(arr1.avg).toThrow();
+
+            let arr2 = [1,2,3];
+            expect(arr2.avg()).toBe(2);
+            expect([].avg()).toBe(null);
+        });
+    })
+    //sd
+    describe(".sd",function(){
+        let m;
+        beforeEach(function(){
+            m = new M;
+        });
+        it("should throw error if any element is not a number of if input is not an array",function(){
+            let arr = [1,3,4,5,"g"];
+            expect(()=>m.sd(arr)).toThrow();
+        });
+
+        it("should return the standard deviation of the array of numbers",function(){
+            let arr = [2, 4, 4, 4, 5, 5, 7, 9];
+            expect(m.sd(arr)).toBe(2);
         });
         it("should return 0 on an empty array",function(){
-
+            expect(m.sd([])).toBe(0);
         });
         it("should work properly as Array method when enhancement is active",function(){
+            new M({enhance:true});
+            let arr1 = [1,3,4,5,"g"];
+            expect(arr1.sd).toThrow();
+
+            let arr2 = [2, 4, 4, 4, 5, 5, 7, 9];
+            expect(arr2.sd()).toBe(2);
+            expect([].sd()).toBe(0);
         });
     });
     //remove
@@ -460,7 +504,6 @@ describe("M",function(){
             let obj = {};
             let arr = [1,1,1,2,4,1,5,5,6,obj,obj];
             let result = m.findDups(arr);
-            console.log(result)
             expect(result.includes(1)).toBeTruthy();
             expect(result.includes(5)).toBeTruthy();
             expect(result.includes(obj)).toBeTruthy();
@@ -475,7 +518,7 @@ describe("M",function(){
             expect(result).toEqual(["c"]);
         });
         it("should work properly as Array method when enhancement is active",function(){
-            let new_m = new M({enhance: true});
+            new M({enhance: true});
             let obj = {};            
             let arr = [1,1,1,2,1,5,5,obj,obj];
             let result = arr.findDups();
