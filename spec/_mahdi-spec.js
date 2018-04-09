@@ -129,12 +129,16 @@ describe("M", function () {
                 checkArrayMethod("sd");
             });
             // remove
-            it("should add String and Array .remove method", function () {
+            it("should add Array .remove method", function () {
                 checkArrayMethod("remove");
             });
             // findDups
-            it("should add String and Array .findDups method", function () {
+            it("should add Array .findDups method", function () {
                 checkArrayMethod("findDups");
+            });
+            // random
+            it("should add Array .random method", function () {
+                checkArrayMethod("random");
             });
         });
 
@@ -316,14 +320,38 @@ describe("M", function () {
             return s;
         }
     }
+    /**
+     * Counts number of item in array.
+     * @param {Array} array array of items
+     * @param {*} item item from array
+     * @return count of number of time item occurs in array
+     */
+    function countOfOccurance(array, item) {
+        let count = 0;
+        for (let _item of array) if (item === _item) count++;
+        return count;
+    }
     // random
     describe(".random", function () {
         let trials = 1000;
-        let pValThresh = 0.05;
+        let pValThresh = 0.029; // will randomly fail sometimes!
         let m;
-        beforeEach(function(){
+
+        it("should work properly as an Array method when enhancement is active ",function(){
+            new M({enhance:true});
+            let arr = [1,3,4,5];
+            expect(()=>arr.random()).not.toThrow();
+            let arr2 = [];
+            for(let i = 0; i<trials; i++){
+                arr2.push(arr.random());
+            }
+            expect(arr2.every(x=>arr.includes(x))).toBeTruthy();
+        });
+
+        beforeEach(function () {
             m = new M;
-        })
+        });
+
         it("(take with grain of salt) should return pseudorandom numbers by default", function () {
             expect(typeof m.random()).toBe("number");
 
@@ -333,14 +361,14 @@ describe("M", function () {
                 let bin = Math.floor(m.random() * 10);
                 arr[bin]++;
             }
-            let expectedVal = trials/arr.length;
+            let expectedVal = trials / arr.length;
             let qSum = 0;
-            for(let count of arr){
-                qSum += Math.pow(count-expectedVal,2)/expectedVal;
+            for (let count of arr) {
+                qSum += Math.pow(count - expectedVal, 2) / expectedVal;
             }
-            
+
             let degOfFreedom = arr.length - 1;
-            expect(pochisq(qSum, degOfFreedom)>pValThresh).toBeTruthy();
+            expect(pochisq(qSum, degOfFreedom) > pValThresh).toBeTruthy();
 
         });
 
@@ -371,137 +399,202 @@ describe("M", function () {
             expect(arr1).not.toEqual(arr2);
         });
 
-        it("should throw error if first argument is not a number or an array",function(){
-            expect(()=>m.random("blah")).toThrow();
-            expect(()=>m.random(1)).not.toThrow();
-            expect(()=>m.random([4,5,3])).not.toThrow();
+        it("should throw error if first argument is not a number or an array", function () {
+            expect(() => m.random("blah")).toThrow();
+            expect(() => m.random(1)).not.toThrow();
+            expect(() => m.random([4, 5, 3])).not.toThrow();
         });
 
-        it("should throw error if second argument is not a number",function(){
-            expect(()=>m.random(1,"blah")).toThrow();
-            expect(()=>m.random(1,1)).not.toThrow();
+        it("should throw error if second argument is not a number", function () {
+            expect(() => m.random(1, "blah")).toThrow();
+            expect(() => m.random(1, 1)).not.toThrow();
         });
 
-        it("(take with grain of salt) should return random decimal between 0 (inclusive) and 1 (exclusive) when no arguments given",function(){
+        it("(take with grain of salt) should return random decimal between 0 (inclusive) and 1 (exclusive) when no arguments given", function () {
             let maxVal = 10;
             let arr1 = [];
             let arr2 = new Array(maxVal).fill(0); // holding bins
-            
-            for(let i = 0; i <trials; i++){
+
+            for (let i = 0; i < trials; i++) {
                 let randNum = m.random();
                 arr1.push(randNum);
-                let bin = Math.floor(randNum*10);
+                let bin = Math.floor(randNum * 10);
                 arr2[bin]++;
             }
-            expect(arr1.every(x=>x<1&&x>=0)).toBeTruthy();
-            
+            expect(arr1.every(x => x < 1 && x >= 0)).toBeTruthy();
+
             // testing pseudorandomness using chi-square testing
-            let expectedVal = trials/arr2.length;
+            let expectedVal = trials / arr2.length;
             let qSum = 0;
             let degOfFreedom = arr2.length - 1;
-            
-            for(let count of arr2){
-                qSum += Math.pow(count - expectedVal,2)/expectedVal;
+
+            for (let count of arr2) {
+                qSum += Math.pow(count - expectedVal, 2) / expectedVal;
             }
-            expect(pochisq(qSum, degOfFreedom)>pValThresh).toBeTruthy();
+            expect(pochisq(qSum, degOfFreedom) > pValThresh).toBeTruthy();
         });
 
-        it("(take with grain of salt) when given one number argument, should return random integer between 0 (inclusive) and that number (exclusive)",function(){
+        it("(take with grain of salt) when given one number argument, should return random integer between 0 (inclusive) and that number (exclusive)", function () {
             let maxVal = 5;
             let arr1 = [];
             let arr2 = new Array(maxVal).fill(0); // holding bins
-            
-            for(let i = 0; i <trials; i++){
+
+            for (let i = 0; i < trials; i++) {
                 let randNum = m.random(maxVal);
                 arr1.push(randNum);
                 let bin = Math.floor(randNum);
                 arr2[bin]++;
             }
-            expect(arr1.every(x=> x < maxVal && x >= 0 )).toBeTruthy();
-            
+            expect(arr1.every(x => x < maxVal && x >= 0)).toBeTruthy();
+
             // testing pseudorandomness using chi-square testing
-            let expectedVal = trials/arr2.length;
+            let expectedVal = trials / arr2.length;
             let qSum = 0;
             let degOfFreedom = arr2.length - 1;
-            
-            for(let count of arr2){
-                qSum += Math.pow(count - expectedVal,2)/expectedVal;
+
+            for (let count of arr2) {
+                qSum += Math.pow(count - expectedVal, 2) / expectedVal;
             }
-            expect(pochisq(qSum, degOfFreedom)>pValThresh).toBeTruthy();
+            expect(pochisq(qSum, degOfFreedom) > pValThresh).toBeTruthy();
         });
 
-        it("(take with grain of salt) when given two number arguments, should return a random integer between first and second argument (exclusive)",function(){
+        it("(take with grain of salt) when given two number arguments, should return a random integer between first and second argument (exclusive)", function () {
             let maxVal = 8;
             let minVal = 2;
             let arr1 = [];
-            let arr2 = new Array(maxVal-minVal).fill(0); // holding bins
-            
-            for(let i = 0; i <trials; i++){
+            let arr2 = new Array(maxVal - minVal).fill(0); // holding bins
+
+            for (let i = 0; i < trials; i++) {
                 let randNum = m.random(minVal, maxVal);
                 arr1.push(randNum);
-                let bin = Math.floor(randNum)-minVal;
+                let bin = Math.floor(randNum) - minVal;
                 arr2[bin]++;
             }
-            expect(arr1.every(x=> x < maxVal && x >= minVal )).toBeTruthy();
-            
+            expect(arr1.every(x => x < maxVal && x >= minVal)).toBeTruthy();
+
             // testing pseudorandomness using chi-square testing
-            let expectedVal = trials/arr2.length;
+            let expectedVal = trials / arr2.length;
             let qSum = 0;
             let degOfFreedom = arr2.length - 1;
-            
-            for(let count of arr2){
-                qSum += Math.pow(count - expectedVal,2)/expectedVal;
+
+            for (let count of arr2) {
+                qSum += Math.pow(count - expectedVal, 2) / expectedVal;
             }
-            expect(pochisq(qSum, degOfFreedom)>pValThresh).toBeTruthy();
+            expect(pochisq(qSum, degOfFreedom) > pValThresh).toBeTruthy();
         });
-        it("(take with grain of salt) when given an Array as an argument, should return a random item in the array",function(){
+
+        it("(take with grain of salt) when given an Array as an argument, should return a random item in the array", function () {
             let obj = {};
-            let inputArr = ["this",obj,1,"this",true,"this","this"];
+            let inputArr = ["this", obj, 1, "this", true, "this", "this"];
             let arr = [];
-            
-            for(let i = 0; i <trials; i++){
+
+            for (let i = 0; i < trials; i++) {
                 let randItem = m.random(inputArr);
                 arr.push(randItem);
             }
-            expect(arr.every(x=> inputArr.includes(x))).toBeTruthy();
-            
-            /**
-             * Counts number of item in array.
-             * @param {Array} array array of items
-             * @param {*} item item from array
-             * @return count of number of time item occurs in array
-             */
-            function countOfOccurance(array,item){
-                let count = 0;
-                for(let _item of array) if(item===_item)count++;
-                console.log(count);
-                return count;
-            }
+            expect(arr.every(x => inputArr.includes(x))).toBeTruthy();
 
             // testing pseudorandomness using chi-square testing
             let qSum = 0;
             let degOfFreedom = inputArr.length - 1;
-            for(let item of inputArr){
-                let expectedVal = trials/inputArr.length;
-                if(item==="this"){
-                    expectedVal /= 4;
+            for (let item of ["this", obj, 1, true]) {
+                let expectedVal = trials / inputArr.length;
+                if (item === "this") {
+                    expectedVal *= 4;
                 }
-                qSum += Math.pow(countOfOccurance(arr,item) - expectedVal,2)/expectedVal;
+                qSum += Math.pow(countOfOccurance(arr, item) - expectedVal, 2) / expectedVal;
             }
-            console.log(qSum);
-            console.log(pochisq(qSum, degOfFreedom));
-            expect(pochisq(qSum, degOfFreedom)>pValThresh).toBeTruthy();
+            expect(pochisq(qSum, degOfFreedom) > pValThresh).toBeTruthy();
         });
-        
+
     });
+    
+    describe(".normRand",function(){
+        let m;
+        let trials = 1000;
+        beforeEach(function(){
+            m = new M;
+        });
+
+        it("should throw error if first argument given is not a number",function(){
+            expect(()=>m.normRand()).not.toThrow();
+            expect(()=>m.normRand(1)).not.toThrow();
+            expect(()=>m.normRand("ha")).toThrowError(TypeError);
+        });
+        it("should throw error if second argument given is not a number",function(){
+            expect(()=>m.normRand(1,3)).not.toThrow();
+            expect(()=>m.normRand(1,"ha")).toThrowError(TypeError);
+        });
+
+        it("(take with grain of salt) should returns random number with mean of 0 and standard deviation of 1, by default", function(){
+            let arr = [];
+            let total = 0;
+            for(let i = 0;i<trials; i++){
+                let num = m.normRand();
+                total += num;
+                arr.push(num);
+            }
+            
+            let mean = total / trials;
+            expect(mean).toBeCloseTo(0,1);
+            let std_sum = arr.map(x=>Math.pow(x-mean,2)).reduce((acc,val)=>acc+val);
+            let std = Math.sqrt(std_sum/trials);
+            expect(std).toBeCloseTo(1,1);
+        });
+        it("(take with grain of salt) should return a number with a mean of 0 and a standard deviation of the input number", function(){
+
+        });
+        it("(take with grain of salt) should return a number with the standard deviation of the first number argument and a mean of the second number argument", function(){
+
+        });
+
+        it("should return the same numbers when seed is set", function(){
+
+        });
+    });
+
     // randName
     xdescribe(".randName", function () {
-        it("should return pseudorandom names by default", function () {
+        it("should return pseudorandom strings (names) by default", function () {
+            let m = new M;
+            let arr = [];
 
+            for (let i = 0; i < trials; i++) {
+                arr.push();
+            }
+            expect(arr.every(x => inputArr.includes(x))).toBeTruthy();
+
+            // testing pseudorandomness using chi-square testing
+            let qSum = 0;
+            let degOfFreedom = inputArr.length - 1;
+            for (let item of ["this", obj, 1, true]) {
+                let expectedVal = trials / inputArr.length;
+                if (item === "this") {
+                    expectedVal *= 4;
+                }
+                qSum += Math.pow(countOfOccurance(arr, item) - expectedVal, 2) / expectedVal;
+            }
+            expect(pochisq(qSum, degOfFreedom) > pValThresh).toBeTruthy();
         });
 
-        it("should return the same names when seed is set", function () {
+        it("should throw an error if a non-number argument is give",function(){
 
+        });
+        it("should accept a number argument and return a string with the same number of words separated by a space", function(){
+
+        });
+        it("should return the same names when seed is set", function () {
+            let m = new M({seed:123});
+            let n = new M({seed:123});
+            let arr1 = [];
+            let arr2 = [];
+
+            for(let i = 0; i<trials; i++){
+                arr1.push(m.randName());
+                arr2.push(n.randName());
+            }
+
+            expect(arr1).toEqual(arr2);
         });
     });
 
@@ -534,7 +627,7 @@ describe("M", function () {
         });
 
         it("should throw an error if a non-string is given, or if any item in the array is a non-string", function () {
-            expect(() => m.capFirst(123)).toThrow();
+            expect(() => m.capFirst(123)).toThrowError(TypeError);
         });
 
         it("should work properly as String method when string enhancement is active", function () {
@@ -577,10 +670,10 @@ describe("M", function () {
         })
 
         it("should throw error if first two arguments are not both string or both number or if third argument is not a boolean", function () {
-            expect(() => { m.sort(true, false) }).toThrow();
-            expect(() => { m.sort(1, "a") }).toThrow();
-            expect(() => { m.sort("a", 2) }).toThrow();
-            expect(() => { m.sort(1, 2, 2) }).toThrow();
+            expect(() => { m.sort(true, false) }).toThrowError(TypeError);
+            expect(() => { m.sort(1, "a") }).toThrowError(TypeError);
+            expect(() => { m.sort("a", 2) }).toThrowError(TypeError);
+            expect(() => { m.sort(1, 2, 2) }).toThrowError(TypeError);
         })
         it("should not throw error when all parameters are valid", function () {
             expect(() => { m.sort(1, 2) }).not.toThrow();
@@ -641,10 +734,10 @@ describe("M", function () {
         });
         it("should throw error if any element is not a number", function () {
             let arr = [1, 2, "3"];
-            expect(() => m.sum(arr)).toThrow();
+            expect(() => m.sum(arr)).toThrowError(TypeError);
         });
         it("should throw error if input is not an array", function () {
-            expect(() => m.sum(3)).toThrow();
+            expect(() => m.sum(3)).toThrowError(TypeError);
         });
         it("should return 0 on an empty array", function () {
             let arr = [];
@@ -665,7 +758,7 @@ describe("M", function () {
 
         it("should throw error if input is not an array or if any item is not a number", function () {
             let arr = [1, 3, 4, 5, "g"];
-            expect(() => m.avg(arr)).toThrow();
+            expect(() => m.avg(arr)).toThrowError(TypeError);
         });
         it("should return the average value from the array", function () {
             let arr = [1, 2, 3];
@@ -673,7 +766,7 @@ describe("M", function () {
         });
 
         it("should return null on an empty array", function () {
-            expect(m.avg([])).toBe(null);
+            expect(m.avg([])).toBeNull();
         });
 
         it("should work properly as Array method when enhancement is active", function () {
@@ -683,7 +776,7 @@ describe("M", function () {
 
             let arr2 = [1, 2, 3];
             expect(arr2.avg()).toBe(2);
-            expect([].avg()).toBe(null);
+            expect([].avg()).toBeNull();
         });
     })
     //sd
@@ -736,7 +829,7 @@ describe("M", function () {
 
         it("should return null if element is not found in the array by default", function () {
             let arr = [1, 2, 3, 4, 5];
-            expect(m.remove(arr, 6)).toBe(null);
+            expect(m.remove(arr, 6)).toBeNull();
         });
 
         it("should remove all instances of the given element if 3nd argument is true and return all elements removed as a new array", function () {
@@ -756,7 +849,7 @@ describe("M", function () {
             expect(arr).toEqual(["b", "c", "a", "a", "b"]);
             expect(arr.remove("a", true)).toEqual(["a", "a"]);
             expect(arr).toEqual(["b", "c", "b"]);
-            expect([].remove("b")).toBe(null);
+            expect([].remove("b")).toBeNull();
             expect([].remove("b", true)).toEqual([]);
         });
     });
