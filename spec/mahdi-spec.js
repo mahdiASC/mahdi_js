@@ -329,15 +329,15 @@ describe("M", function () {
         let pValThresh = 0.029; // will randomly fail sometimes!
         let m;
 
-        it("should work properly as an Array method when enhancement is active ",function(){
-            new M({enhance:true});
-            let arr = [1,3,4,5];
-            expect(()=>arr.random()).not.toThrow();
+        it("should work properly as an Array method when enhancement is active ", function () {
+            new M({ enhance: true });
+            let arr = [1, 3, 4, 5];
+            expect(() => arr.random()).not.toThrow();
             let arr2 = [];
-            for(let i = 0; i<trials; i++){
+            for (let i = 0; i < trials; i++) {
                 arr2.push(arr.random());
             }
-            expect(arr2.every(x=>arr.includes(x))).toBeTruthy();
+            expect(arr2.every(x => arr.includes(x))).toBeTruthy();
         });
 
         beforeEach(function () {
@@ -500,79 +500,86 @@ describe("M", function () {
         });
 
     });
-    
-    describe(".normRand",function(){
+
+    describe(".normRand", function () {
         let m;
         let trials = 1000;
-        beforeEach(function(){
+        beforeEach(function () {
             m = new M;
         });
 
-        it("should throw error if first argument given is not a number",function(){
-            expect(()=>m.normRand()).not.toThrow();
-            expect(()=>m.normRand(1)).not.toThrow();
-            expect(()=>m.normRand("ha")).toThrowError(TypeError);
-        });
-        it("should throw error if second argument given is not a number",function(){
-            expect(()=>m.normRand(1,3)).not.toThrow();
-            expect(()=>m.normRand(1,"ha")).toThrowError(TypeError);
+        it("should throw error if first argument given is not a number", function () {
+            expect(() => m.normRand()).not.toThrow();
+            expect(() => m.normRand(1)).not.toThrow();
+            expect(() => m.normRand("ha")).toThrowError(TypeError);
         });
 
-        it("(take with grain of salt) should returns random number with mean of 0 and standard deviation of 1, by default", function(){
+        it("should call on .random()", function () {
+            spyOn(m, "random");
+            m.normRand();
+            expect(m.random).toHaveBeenCalled();
+        });
+
+        it("should throw error if second argument given is not a number", function () {
+            expect(() => m.normRand(1, 3)).not.toThrow();
+            expect(() => m.normRand(1, "ha")).toThrowError(TypeError);
+        });
+
+        it("(take with grain of salt) should returns random number with mean of 0 and standard deviation of 1, by default", function () {
             let arr = [];
             let total = 0;
-            for(let i = 0;i<trials; i++){
+            for (let i = 0; i < trials; i++) {
                 let num = m.normRand();
                 total += num;
                 arr.push(num);
             }
-            
+
             let mean = total / trials;
-            expect(mean).toBeCloseTo(0,0);
-            let std_sum = arr.map(x=>Math.pow(x-mean,2)).reduce((acc,val)=>acc+val);
-            let std = Math.sqrt(std_sum/trials);
-            expect(std).toBeCloseTo(1,0);
+            expect(mean).toBeCloseTo(0, 0);
+            let std_sum = arr.map(x => Math.pow(x - mean, 2)).reduce((acc, val) => acc + val);
+            let std = Math.sqrt(std_sum / trials);
+            expect(std).toBeCloseTo(1, 0);
         });
-        it("(take with grain of salt) should return a number with a mean of 0 and a standard deviation of the input number", function(){
+        it("(take with grain of salt) should return a number with a mean of 0 and a standard deviation of the input number", function () {
             let arr = [];
             let total = 0;
             let inputStd = 5;
-            for(let i = 0;i<trials; i++){
+            for (let i = 0; i < trials; i++) {
                 let num = m.normRand(inputStd);
                 total += num;
                 arr.push(num);
             }
-            
+
             let mean = total / trials;
-            expect(mean).toBeCloseTo(0,0);
-            let std_sum = arr.map(x=>Math.pow(x-mean,2)).reduce((acc,val)=>acc+val);
-            let std = Math.sqrt(std_sum/trials);
-            expect(std).toBeCloseTo(inputStd,0);
+            expect(mean).toBeCloseTo(0, 0);
+            let std_sum = arr.map(x => Math.pow(x - mean, 2)).reduce((acc, val) => acc + val);
+            let std = Math.sqrt(std_sum / trials);
+            expect(std).toBeCloseTo(inputStd, 0);
         });
-        it("(take with grain of salt) should return a number with the standard deviation of the first number argument and a mean of the second number argument", function(){
+        it("(take with grain of salt) should return a number with the standard deviation of the first number argument and a mean of the second number argument", function () {
             let arr = [];
             let total = 0;
             let inputStd = 5;
             let inputMean = 10;
-            for(let i = 0;i<trials; i++){
-                let num = m.normRand(inputStd,inputMean);
+            for (let i = 0; i < trials; i++) {
+                let num = m.normRand(inputStd, inputMean);
                 total += num;
                 arr.push(num);
             }
-            
+
             let mean = total / trials;
-            expect(mean).toBeCloseTo(inputMean,0);
-            let std_sum = arr.map(x=>Math.pow(x-mean,2)).reduce((acc,val)=>acc+val);
-            let std = Math.sqrt(std_sum/trials);
-            expect(std).toBeCloseTo(inputStd,0);
+            expect(mean).toBeCloseTo(inputMean, 0);
+            let std_sum = arr.map(x => Math.pow(x - mean, 2)).reduce((acc, val) => acc + val);
+            let std = Math.sqrt(std_sum / trials);
+            expect(std).toBeCloseTo(inputStd, 0);
         });
 
-        it("should return the same numbers when seed is set", function(){
+        it("should return the same numbers when seed is set", function () {
             let arr1 = [];
             let arr2 = [];
-            let o = new M({seed:123});
-            let n = new M({seed:123});
-            for(let i = 0;i<trials; i++){
+            let o = new M({ seed: 123 });
+            let n = new M({ seed: 123 });
+            for (let i = 0; i < trials; i++) {
                 arr1.push(o.normRand());
                 arr2.push(n.normRand());
             }
@@ -583,42 +590,46 @@ describe("M", function () {
     // randName
     describe(".randName", function () {
         let m;
-        const trials = 1000;        
-        beforeEach(function(){
+        const trials = 1000;
+        beforeEach(function () {
             m = new M;
         });
 
         it("(take with grain of salt) should return pseudorandom strings (names) by default", function () {
             const arr = [];
             let flag = false;
-            for(let i = 0; i < 10; i++){
+            for (let i = 0; i < 10; i++) {
                 const name = m.randName();
-                if(arr.includes(name)) flag = true;
+                if (arr.includes(name)) flag = true;
                 arr.push(name);
             }
             expect(flag).toBeFalsy();
         });
-        
-        it("should accept a number argument and return a string with the same number of words separated by a space, by default", function(){
+        it("should call on .random()", function () {
+            spyOn(m, "random");
+            m.randName();
+            expect(m.random).toHaveBeenCalled();
+        });
+        it("should accept a number argument and return a string with the same number of words separated by a space, by default", function () {
             const name = m.randName(5);
             expect(name.split(" ").length).toBe(5);
         });
 
-        it("should take a second string argument as the delimiter for the words",function(){
-            const name = m.randName(5,"+");
+        it("should take a second string argument as the delimiter for the words", function () {
+            const name = m.randName(5, "+");
             expect(name.split("+").length).toBe(5);
         });
 
-        it("should throw an error if a non-number argument is given for first argument or nonstring given for second",function(){
-            expect(()=>m.randName("yo")).toThrowError(TypeError);
+        it("should throw an error if a non-number argument is given for first argument or nonstring given for second", function () {
+            expect(() => m.randName("yo")).toThrowError(TypeError);
         });
         it("should return the same names when seed is set", function () {
-            let m = new M({seed:123});
-            let n = new M({seed:123});
+            let m = new M({ seed: 123 });
+            let n = new M({ seed: 123 });
             let arr1 = [];
             let arr2 = [];
 
-            for(let i = 0; i<trials; i++){
+            for (let i = 0; i < trials; i++) {
                 arr1.push(m.randName());
                 arr2.push(n.randName());
             }
@@ -868,47 +879,99 @@ describe("M", function () {
     //STATS//
     /////////
     //randProb
-    xdescribe(".randProb", function () {
+    describe(".randProb", function () {
+        let m;
+        const trials = 1000;
+        beforeEach(function () {
+            m = new M;
+        });
+
         it("should throw an error if an object is not given", function () {
-
+            expect(() => m.randProb("yo")).toThrowError(TypeError);
         });
+
+        // had issue with spy blocking proper execution
+        xit("should call on .random()", function () {
+            spyOn(m, "random");
+            m.randProb({ "a": 1 });
+            expect(m.random).toHaveBeenCalled();
+        });
+
         it("should throw an error if any value in the object is not a number", function () {
-
-        });
-
-        it("should use the proper random function given by configs", function () {
-
+            const obj1 = { "a": 1 };
+            expect(() => m.randProb(obj1)).not.toThrow();
+            const obj2 = { "a": "b" };
+            expect(() => m.randProb(obj2)).toThrowError(TypeError);
+            const obj3 = { "a": true };
+            expect(() => m.randProb(obj3)).toThrowError(TypeError);
+            const obj4 = { "a": {} };
+            expect(() => m.randProb(obj4)).toThrowError(TypeError);
         });
 
         it("should return a key from the given object as a string value", function () {
-
+            const obj = { "a": 1 };
+            expect(m.randProb(obj)).toBe("a");
         });
 
         it("should return values in proportion to input values given: as percentage totalling 1", function () {
-
+            const obj = {
+                "first": 0.5,
+                "second": 0.25,
+                "third": 0.25
+            }
+            const arr = [];
+            for (let i = 0; i < trials; i++) {
+                arr.push(m.randProb(obj));
+            }
+            expect(arr.filter(x => x === "first").length / trials).toBeCloseTo(.5, 1);
+            expect(arr.filter(x => x === "second").length / trials).toBeCloseTo(.25, 1);
+            expect(arr.filter(x => x === "third").length / trials).toBeCloseTo(.25, 1);
         });
 
         it("should return values in proportion to input values given: as counts", function () {
-
+            const obj = {
+                "first": 10,
+                "second": 5,
+                "third": 5
+            }
+            const arr = [];
+            for (let i = 0; i < trials; i++) {
+                arr.push(m.randProb(obj));
+            }
+            expect(arr.filter(x => x === "first").length / trials).toBeCloseTo(.5, 1);
+            expect(arr.filter(x => x === "second").length / trials).toBeCloseTo(.25, 1);
+            expect(arr.filter(x => x === "third").length / trials).toBeCloseTo(.25, 1);
         });
     });
     //zScore
-    xdescribe(".zScore", function () {
-        it("", function () {
-
+    describe(".zScore", function () {
+        let m;
+        beforeEach(function () {
+            m = new M;
         });
 
-        it("should throw error if argument is not a number", function () {
+        it("returns the proper zScore", function () {
+            expect(m.zScore(5, 2, 1)).toBe(3);
+        });
 
+        it("should throw error if any of the first three arguments is not a number", function () {
+            expect(() => m.zScore(true, 2, 3)).toThrowError(TypeError);
+            expect(() => m.zScore(1, "yo", 3)).toThrowError(TypeError);
+            expect(() => m.zScore(1, 2, {})).toThrowError(TypeError);
         });
     });
     //calcPercentile
-    xdescribe(".calcPercentile", function () {
-        it("", function () {
-
+    describe(".calcPercentile", function () {
+        let m;
+        beforeEach(function () {
+            m = new M;
+        });
+        it("should return the approximate percentile as a decimal given a proper z-score", function () {
+            expect(m.calcPercentile(0.045)).toBeCloseTo(.51, 1);
+            expect(m.calcPercentile(0.15)).toBeCloseTo(.56, 1);
         });
         it("should throw error if argument is not a number", function () {
-
+            expect(() => m.calcPercentile("sup")).toThrowError(TypeError);
         });
     });
     //asyncLoop
