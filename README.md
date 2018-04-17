@@ -43,7 +43,9 @@ m.random(); // 0.16526106787346073
 * If given 1 array argument, returns a random element from the array.
 ```javascript
 const arr = ["one","two","three"];
-m.random(arr); // "two" 
+m.random(arr); // "two"
+// With enhancement
+arr.random(); // "three"
 ```
 * If given 1 number argument, returns a random integer between 0 (inclusive) and the given number (exclusive).
 ```javascript
@@ -90,7 +92,7 @@ Returns a key from input object based on that key's number value (counts or prob
 
 *As counts*
 ```javascript
-let probabilities = {
+const probabilities = {
     "a":10,
     "b":5,
     "c":5
@@ -103,7 +105,7 @@ m.randProb(probabilities); // "b"
 ```
 *As probabilities*
 ```javascript
-let probabilities = {
+const probabilities = {
     "a":0.5,
     "b":0.25,
     "c":0.25
@@ -116,7 +118,7 @@ m.randProb(probabilities); // "a"
 ```
 
 ## Enhanced String methods
-### .capFirst
+### .capFirst()
 Capitalizes first letter of a string or each element of an array.
 
 ```javascript
@@ -124,7 +126,7 @@ m.capFirst("blah"); // "Blah"
 // With enhancement
 "haha".capFirst(); // "Haha"
 ```
-Can be given an additional boolean argument to capitalize each word. The delimiter can be provided as an additional argument (" " by default);
+Can be given an additional boolean argument to capitalize each word. The delimiter can be provided as an additional argument (" " by default).
 ```javascript
 const phrase = "look out radioactive man!";
 m.capFirst(phrase, true); // "Look Out Radioactive Man!"
@@ -139,33 +141,136 @@ Can be given an array of strings and returns a new array with each string capita
 ```javascript
 const arr = ["this rocks","don't you","think?"];
 m.capFirst(arr); // ["This rocks", "Don't you", "Think?"]
-//With enhancement
+// With enhancement
 arr.capFirst(); // ["This rocks", "Don't you", "Think?"]
 arr.capFirst(true); // ["This Rocks", "Don't You", "Think?"]
 arr.capFirst(true, "o"); // ["This roCks", "DoN't yoU", "Think?"]
 ```
 
-### filterASCII
+### .filterASCII()
+Removes non-ASCII characters from string or array elements.
 
 ```javascript
+const word = "t¢e¥s®t±";
+m.filterASCII(word); // "test"
+// With enhancement
+word.filterASCII(); // "test"
+
+const arr = ["t¢","e¥","s®","t±"];
+m.filterASCII(arr); // ["t", "e", "s", "t"]
+// With enhancement
+arr.filterASCII(); // ["t", "e", "s", "t"]
 ```
+
 ## Enhanced Array methods
-sum  
-avg  
-sd  
-remove  
-findDups  
+
+### .sum()
+Sums array of numbers.
+```javascript
+const arr = [1,2,3,4];
+// With enhancement
+m.sum(arr); // 10
+arr.sum(); // 10
+```
+### .avg()
+Returns average of array of numbers.
+```javascript
+const arr = [1,2,3,4];
+// With enhancement
+m.avg(arr); // 2.5
+arr.avg(); // 2.5
+```
+### .sd()
+Returns standard deviation of array of numbers.
+```javascript
+const arr = [1,2,3,4,5,6,7,8,9,10];
+// With enhancement
+m.sd(arr); // 2.8722813232690143
+arr.sd(); // 2.8722813232690143
+```
+### .remove()
+Removes given item from array (modifying it) and returns the item.  
+
+remove(arr, item, flag = false)
+```javascript
+const someItem = {"key":"value"};
+const arr = [9,false, someItem, 9];
+
+m.remove(arr, someItem); // {"key":"value"}
+arr; // [9, false, 9]
+
+// With enhancement
+arr.remove(9); // 9
+arr; // [false, 9]
+```
+
+If flag is true, all occurances will be removed and an array of each item removed will be returned.
+
+```javascript
+const arr = [9,false, "yo", 9, 5, "yo"];
+
+m.remove(arr, "yo", true); // ["yo", "yo"]
+arr; // [9, false, 9, 5]
+
+// With enhancement
+arr.remove(9, true); // [9, 9]
+arr; // [false, 5]
+```
+### .findDups()
+Returns array of duplicate items.
+
+If given an additional boolean argument of false, will return a new array with dupicates removed from array given.
+```javascript
+const arr = ["a","b","c","b","a","a"];
+m.findDups(arr); // ["b","a"]
+m.findDups(arr, false); // ["c"]
+
+// With enhancement
+arr.findDups(); // ["b","a"]
+arr.findDups(false); // ["c"]
+```
 
 ## Statistical Tools
-zScore  
-calcPercentile
+### .zScore()
+Returns a number (+/-) representing how many standard deviations the value is from the mean.  
+
+.zScore(val, mean, stdv)
+
+```javascript
+const valInQuestion = 5;
+const meanOfPopulation = 20;
+const standardDev = 7;
+m.zScore(valInQuestion,meanOfPopulation,standardDev); // -2.142857142857143
+```
+### .calcPercentile()
+Returns statistical percentile for a given z-score for a one-sided tail.
+```javascript
+const z_score = -2.142857142857143;
+m.calcPercentile(z_score); // 0.016199999999999992
+```
 
 ## Asyncronous Loop
-asyncLoop
+### .asyncLoop()
+Loops an asyncronous function a number of iterations and returns a Promise.  
+
+.asyncLoop(iterations, func)  
+
+*NOTE: func will be supplied 2 arguments: the current loop iteration and a callback function ("resolve" from a Promise) which must be called when the func has completed its asyncronous task*
+```javascript
+const myFunction = (iteration, resolve) => {
+    // Some asyncronous task
+    setTimeout(function(){
+        console.log(iteration);
+        resolve(); // must call this when done
+    }, 1000);
+}
+
+m.asyncLoop(10,myFunction);
+```
 
 
 # Future Development
 * Fix constructor to accept arguments more intuitively
-* Library Website
+* Creation of library website
 * Allow seeding with string argument
 * chi-square testing function
