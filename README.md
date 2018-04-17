@@ -44,7 +44,6 @@ m.random(); // 0.16526106787346073
 ```javascript
 const arr = ["one","two","three"];
 m.random(arr); // "two"
-// With enhancement
 arr.random(); // "three"
 ```
 * If given 1 number argument, returns a random integer between 0 (inclusive) and the given number (exclusive).
@@ -60,7 +59,7 @@ m.random(30,60); // 49
 Generates a pseudo-random number based on a normal distrubution.
 * If given no argument, will return a decimal with a std of 1 and a mean of 0.
 ```javascript
-m.normRand(); // -1
+m.normRand(); // -0.7409607351958362
 ```
 * If given 1 number argument, will return an integer with a std of the given number and a mean of 0.
 ```javascript
@@ -84,24 +83,24 @@ A second string argument can be provided as the delimiter (" " by default).
 ```javascript
 m.randName(3);// "Lodu Ukatubo Bu"
 
-m.randName(3,", ");// "Luro, Kemiwu, Isufuo"
+m.randName(3, ", ");// "Luro, Kemiwu, Isufuo"
 ```
 
 ### .randProb()
-Returns a key from input object based on that key's number value (counts or probabilities).
+Returns a key from input object based on that key's number value as counts or probabilities.
 
 *As counts*
 ```javascript
-const probabilities = {
+const counts = {
     "a":10,
     "b":5,
     "c":5
 }
-m.randProb(probabilities); // "a"
-m.randProb(probabilities); // "a"
-m.randProb(probabilities); // "c"
-m.randProb(probabilities); // "a"
-m.randProb(probabilities); // "b"
+m.randProb(counts); // "a"
+m.randProb(counts); // "a"
+m.randProb(counts); // "c"
+m.randProb(counts); // "a"
+m.randProb(counts); // "b"
 ```
 *As probabilities*
 ```javascript
@@ -123,14 +122,12 @@ Capitalizes first letter of a string or each element of an array.
 
 ```javascript
 m.capFirst("blah"); // "Blah"
-// With enhancement
 "haha".capFirst(); // "Haha"
 ```
 Can be given an additional boolean argument to capitalize each word. The delimiter can be provided as an additional argument (" " by default).
 ```javascript
 const phrase = "look out radioactive man!";
 m.capFirst(phrase, true); // "Look Out Radioactive Man!"
-// With enhancement
 phrase.capFirst(true); // "Look Out Radioactive Man!"
 
 m.capFirst(phrase, true, "a"); // "Look out raDioaCtive maN!
@@ -141,7 +138,6 @@ Can be given an array of strings and returns a new array with each string capita
 ```javascript
 const arr = ["this rocks","don't you","think?"];
 m.capFirst(arr); // ["This rocks", "Don't you", "Think?"]
-// With enhancement
 arr.capFirst(); // ["This rocks", "Don't you", "Think?"]
 arr.capFirst(true); // ["This Rocks", "Don't You", "Think?"]
 arr.capFirst(true, "o"); // ["This roCks", "DoN't yoU", "Think?"]
@@ -153,12 +149,10 @@ Removes non-ASCII characters from string or array elements.
 ```javascript
 const word = "t¢e¥s®t±";
 m.filterASCII(word); // "test"
-// With enhancement
 word.filterASCII(); // "test"
 
 const arr = ["t¢","e¥","s®","t±"];
 m.filterASCII(arr); // ["t", "e", "s", "t"]
-// With enhancement
 arr.filterASCII(); // ["t", "e", "s", "t"]
 ```
 
@@ -168,7 +162,6 @@ arr.filterASCII(); // ["t", "e", "s", "t"]
 Sums array of numbers.
 ```javascript
 const arr = [1,2,3,4];
-// With enhancement
 m.sum(arr); // 10
 arr.sum(); // 10
 ```
@@ -176,7 +169,6 @@ arr.sum(); // 10
 Returns average of array of numbers.
 ```javascript
 const arr = [1,2,3,4];
-// With enhancement
 m.avg(arr); // 2.5
 arr.avg(); // 2.5
 ```
@@ -184,7 +176,6 @@ arr.avg(); // 2.5
 Returns standard deviation of array of numbers.
 ```javascript
 const arr = [1,2,3,4,5,6,7,8,9,10];
-// With enhancement
 m.sd(arr); // 2.8722813232690143
 arr.sd(); // 2.8722813232690143
 ```
@@ -199,7 +190,6 @@ const arr = [9,false, someItem, 9];
 m.remove(arr, someItem); // {"key":"value"}
 arr; // [9, false, 9]
 
-// With enhancement
 arr.remove(9); // 9
 arr; // [false, 9]
 ```
@@ -212,7 +202,6 @@ const arr = [9,false, "yo", 9, 5, "yo"];
 m.remove(arr, "yo", true); // ["yo", "yo"]
 arr; // [9, false, 9, 5]
 
-// With enhancement
 arr.remove(9, true); // [9, 9]
 arr; // [false, 5]
 ```
@@ -225,7 +214,6 @@ const arr = ["a","b","c","b","a","a"];
 m.findDups(arr); // ["b","a"]
 m.findDups(arr, false); // ["c"]
 
-// With enhancement
 arr.findDups(); // ["b","a"]
 arr.findDups(false); // ["c"]
 ```
