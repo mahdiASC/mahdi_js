@@ -891,7 +891,7 @@ describe("M", function () {
         });
 
         // had issue with spy blocking proper execution
-        xit("should call on .random()", function () {
+        it("should call on .random()", function () {
             spyOn(m, "random");
             m.randProb({ "a": 1 });
             expect(m.random).toHaveBeenCalled();
@@ -975,19 +975,37 @@ describe("M", function () {
         });
     });
     //asyncLoop
-    xdescribe(".asyncLoop", function () {
-        it("should throw an error if a function is not provided as the 3rd argument", function () {
-
+    describe(".asyncLoop", function () {
+        let m;
+        beforeEach(function(){
+            m = new M;
         });
 
-        it("", function () {
-
+        it("should throw an error if a number is not given as first argument or a function is not given as the 2nd argument", function () {
+            expect(()=>m.asyncLoop(1,(num,res)=>res())).not.toThrowError(TypeError);
+            expect(()=>m.asyncLoop("hah",(num,res)=>res())).toThrowError(TypeError);
+            expect(()=>m.asyncLoop(10,"oops")).toThrowError(TypeError);
         });
-        it("", function () {
 
+        it("should return a Promise object", function () {
+            expect(m.asyncLoop(1,(num,res)=>res()) instanceof Promise).toBeTruthy();
         });
-        it("", function () {
+        
+        describe("async test",function(){
+            let count; 
+            beforeEach(function(done){
+                count = []
+                m.asyncLoop(5,(num,res)=>{
+                    count.push(num);
+                    res();
+                }).then(done);
+            });
 
-        });
+            it("should accept 2nd argument as a callback, which accepts a number and a resolve callback", function (done) {
+                expect(count).toEqual([0,1,2,3,4]);
+                done();
+            });
+        })
+        
     });
 })
