@@ -2,7 +2,6 @@
 
 # Mahdi.js
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![GitHub release](https://img.shields.io/github/release/mahdiASC/mahdi_js.svg)
 [![GitHub license](https://img.shields.io/github/license/mahdiASC/mahdi_js.svg)](https://github.com/mahdiASC/mahdi_js/blob/master/license)
 [![GitHub issues](https://img.shields.io/github/issues/mahdiASC/mahdi_js.svg)](https://github.com/mahdiASC/mahdi_js/issues)
@@ -268,8 +267,6 @@ m.asyncLoop(10,myFunction);
 
 # License
 
-Copyright 2018 Mahdi Shadkamfarrokhi
-
 This library is and related files in this repository are held to the standard [MIT License](https://github.com/mahdiASC/mahdi_js/blob/master/license).
 
 # Future Development
@@ -277,3 +274,4 @@ This library is and related files in this repository are held to the standard [M
 * Creation of library website
 * Allow seeding with string argument
 * chi-square testing function
+* Add CONTRIBUTING.md
