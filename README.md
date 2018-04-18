@@ -1,10 +1,53 @@
-# mahdi.js
+<p class="title top"><img src="https://github.com/mahdiASC/mahdi_js/assets/M.png">ahdi.js</p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+![GitHub release](https://img.shields.io/github/release/mahdiASC/mahdi_js.svg)
+[![GitHub license](https://img.shields.io/github/license/mahdiASC/mahdi_js.svg)](https://github.com/mahdiASC/mahdi_js/blob/master/license)
+[![GitHub issues](https://img.shields.io/github/issues/mahdiASC/mahdi_js.svg)](https://github.com/mahdiASC/mahdi_js/issues)
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-blue.svg)
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Tangerine|Rajdhani|Ubuntu');
+
+.top{
+    color:#af13a9;
+    font-size:50px;
+}
+.title{
+    margin:0;
+    font-family: 'Tangerine', cursive;
+    text-align: center;
+}
+
+.header{
+    font-size:40px;
+    color:#8e0f89;
+}
+
+p, li, h2{
+    font-family: 'Rajdhani', sans-serif;
+}
+
+h3, pre{
+    font-family: 'Ubuntu', sans-serif;
+}
+hr{
+    width:75%;
+    border: 0;
+    background-image: -webkit-linear-gradient(left, #000000, #440641, #000000);
+}
+</style>
+
+<hr>
+
 Originally created to address personal common programming needs, this small library offers a number of randomization options, some String and Array enhancements, as well as some statistical tools and an asynchronous loop.
 
 ## Issues
 Please post bugs and other issues in this [repository](https://github.com/mahdiASC/mahdi_js/issues).
 
-# Documentation
+<p class="header title">Documentation</p>  
+<hr>
+
 ## Construction
 
 ```javascript
@@ -255,9 +298,14 @@ const myFunction = (iteration, resolve) => {
 
 m.asyncLoop(10,myFunction);
 ```
+<p class="header title"> License</p>
+<hr>
+Copyright 2018 Mahdi Shadkamfarrokhi
 
+This library is and related files in this repository are held to the standard [MIT License](https://github.com/mahdiASC/mahdi_js/blob/master/license).
 
-# Future Development
+<p class="header title"> Future Development</p>
+<hr>
 * Fix constructor to accept arguments more intuitively
 * Creation of library website
 * Allow seeding with string argument
