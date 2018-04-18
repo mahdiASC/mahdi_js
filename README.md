@@ -9,10 +9,10 @@
 
 Originally created to address personal common programming needs, this small library offers a number of randomization options, some String and Array enhancements, as well as some statistical tools and an asynchronous loop.
 
-## Issues
+# Issues
 Please post bugs and other issues in this [repository](https://github.com/mahdiASC/mahdi_js/issues).
 
-## Documentation  
+# Documentation  
 
 ## Construction
 
